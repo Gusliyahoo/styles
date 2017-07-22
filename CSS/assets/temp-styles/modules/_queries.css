@@ -1,0 +1,15 @@
+@custom-media --extra-small-viewport (width < 530px);
+
+@custom-media --small-viewport (width >= 530px);
+
+@custom-media --medium-viewport (width >= 800px);
+
+@custom-media --large-viewport (width >= 1010px);
+
+@define-mixin clearfix {
+	&::after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+};
