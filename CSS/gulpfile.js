@@ -5,7 +5,9 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     autoprefixer = require('autoprefixer'),
     lost = require('lost'),
-    precss = require('precss');
+    precss = require('precss'),
+    watch = require('gulp-watch'),
+    browserSync = require('browser-sync').create(); 
 
 // Declare paths to be used
 var paths = {
@@ -22,24 +24,22 @@ gulp.task('styles', function() {
       precss(),
       autoprefixer()
     ]))
-    //Prevents gulp from stop working after an error is detected, it just prints the error on the console
     .on('error', function(errorInfo){
 			console.log(errorInfo.toString())
             this.emit('end');   
-    })
-    // sourcemaps help to identify which file a property belongs to when inspecting with e.g. Google Developers tools.    
+    }) 
     .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest(paths.cssDestination));
+    .pipe(gulp.dest(paths.cssDestination))
+    .pipe(browserSync.stream());
 });
 
-gulp.task('default', ['styles']);
-
-// prints on the console what file has been modified when save was hit.
-var watcher = gulp.watch(paths.cssSource+'**/*.css', ['default']);
-
-watcher.on('change', function(event) {
-console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+// Usar Browser-sync para poder ver el sitio en dispositivos moviles, y en otros browers.
+gulp.task('iniciar', function() {
+    browserSync.init({
+        proxy: "localhost/wordpress"
+    });
+    gulp.watch(paths.cssSource + '**/*.css', ['styles']);
+    gulp.watch("app/*.html").on('change', browserSync.reload);
 });
 
-
-
+gulp.task('default', ['iniciar']);
