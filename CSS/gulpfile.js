@@ -12,7 +12,8 @@ var gulp = require('gulp'),
 // Declare paths to be used
 var paths = {
   cssSource: 'assets/temp-styles/',
-  cssDestination: 'assets/css/'
+  cssDestination: 'assets/css/',
+  directory: 'localhost/wordpress'
 };
 
 gulp.task('styles', function() {
@@ -33,13 +34,13 @@ gulp.task('styles', function() {
     .pipe(browserSync.stream());
 });
 
-// Usar Browser-sync para poder ver el sitio en dispositivos moviles, y en otros browers.
+// Usar Browser-sync para poder ver el sitio en dispositivos moviles, y en otros browsers.
 gulp.task('iniciar', function() {
     browserSync.init({
-        proxy: "localhost/wordpress"
+        proxy: paths.directory
     });
     gulp.watch(paths.cssSource + '**/*.css', ['styles']);
-    gulp.watch("app/*.html").on('change', browserSync.reload);
+    gulp.watch('./*.php').on('change', browserSync.reload);
 });
 
 gulp.task('default', ['iniciar']);
